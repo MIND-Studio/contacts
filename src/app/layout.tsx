@@ -5,6 +5,8 @@ import { mind } from "@mind-studio/ui/themes";
 import "./globals.css";
 import ThemeToggle from "@/components/ThemeToggle";
 import AccountChip from "@/components/AccountChip";
+import { StandaloneOnly } from "@/components/StandaloneOnly";
+import { BrokerThemeSync } from "@/components/BrokerThemeSync";
 
 export const metadata: Metadata = {
   title: "Mind Contacts — people you know, in your pod",
@@ -24,7 +26,10 @@ export default function RootLayout({
           enableSystem={false}
           storageKey="mind-contacts-theme"
         >
-          <Masthead />
+          <BrokerThemeSync />
+          <StandaloneOnly>
+            <Masthead />
+          </StandaloneOnly>
           <main className="flex-1 flex flex-col">{children}</main>
         </ThemeProvider>
       </body>

@@ -15,7 +15,8 @@ import {
   type SolidDataset,
 } from "@inrupt/solid-client";
 import { session } from "@/lib/solid/session";
-import { contactsContainerFor, podRootFromWebId } from "@/lib/config";
+import { isBrokered, brokerFetch, currentIdentity } from "@/lib/solid/broker";
+import { contactsContainerFor } from "@/lib/config";
 
 /**
  * Pod data model — one Turtle resource per contact at
@@ -45,8 +46,13 @@ export type Contact = {
 
 export type ContactFields = Omit<Contact, "id" | "url">;
 
+/**
+ * The fetch every pod call runs through. Inside the Mind shell (brokered mode)
+ * this is the shell's scope-checked broker fetch — Contacts holds no session of
+ * its own; otherwise it's the local OIDC session's authed fetch.
+ */
 function authedFetch(): typeof fetch {
-  return session().fetch as typeof fetch;
+  return isBrokered() ? brokerFetch : (session().fetch as typeof fetch);
 }
 
 /** No-store wrapper so listings aren't served stale from the browser cache
@@ -63,9 +69,11 @@ function is404(e: unknown): boolean {
 }
 
 export function containerForSession(): string {
-  const webId = session().info.webId;
-  if (!webId) throw new Error("Not signed in");
-  return contactsContainerFor(podRootFromWebId(webId));
+  // Brokered-first: inside the Mind shell the container lives under the
+  // shell's workspace pod root, not one derived from the local session WebID.
+  const id = currentIdentity();
+  if (!id) throw new Error("Not signed in");
+  return contactsContainerFor(id.podRoot);
 }
 
 /** Lazily create `{podRoot}apps/contacts/` on first write. */

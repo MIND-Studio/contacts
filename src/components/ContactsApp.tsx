@@ -17,6 +17,7 @@ import {
 } from "@mind-studio/ui";
 import { BookUser, Plus, Search, UserPlus, X } from "lucide-react";
 import { ensureSession, rememberSignedOutPath } from "@/lib/solid/auth";
+import { isBrokered, signalReady } from "@/lib/solid/broker";
 import {
   listContacts,
   createContact,
@@ -52,6 +53,8 @@ export default function ContactsApp() {
     ensureSession()
       .then(async (info) => {
         if (cancelled) return;
+        // Inside the Mind shell, ensureSession resolves a brokered identity
+        // (see broker.ts) so this gate never shows the Connect screen there.
         if (!info.isLoggedIn) {
           // Remember the deep link so reconnecting returns here.
           rememberSignedOutPath();
@@ -68,6 +71,9 @@ export default function ContactsApp() {
           setError(`Could not load contacts from your pod: ${message(e)}`);
           setStatus("ready");
         }
+        // Tell the shell we've rendered so it drops its loading overlay
+        // (no-op when standalone).
+        if (!cancelled && isBrokered()) signalReady();
       })
       .catch((e) => {
         if (!cancelled) {
