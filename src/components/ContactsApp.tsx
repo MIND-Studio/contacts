@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,16 +14,18 @@ import {
   Skeleton,
 } from "@mind-studio/ui";
 import { BookUser, Plus, Search, UserPlus, X } from "lucide-react";
-import { ensureSession, rememberSignedOutPath } from "@/lib/solid/auth";
-import { isBrokered, signalReady } from "@/lib/solid/broker";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import {
-  listContacts,
-  createContact,
-  updateContact,
-  deleteContact,
   type Contact,
   type ContactFields,
+  createContact,
+  deleteContact,
+  listContacts,
+  updateContact,
 } from "@/lib/contacts/store";
+import { ensureSession, rememberSignedOutPath } from "@/lib/solid/auth";
+import { isBrokered, signalReady } from "@/lib/solid/broker";
 import ContactAvatar from "./ContactAvatar";
 import ContactDetail from "./ContactDetail";
 import ContactFormDialog from "./ContactFormDialog";
@@ -90,9 +90,7 @@ export default function ContactsApp() {
     const q = query.trim().toLowerCase();
     if (!q) return contacts;
     return contacts.filter((c) =>
-      [c.name, c.org, c.email]
-        .filter(Boolean)
-        .some((v) => v!.toLowerCase().includes(q))
+      [c.name, c.org, c.email].filter(Boolean).some((v) => v!.toLowerCase().includes(q)),
     );
   }, [contacts, query]);
 
@@ -101,9 +99,7 @@ export default function ContactsApp() {
   function upsertLocal(contact: Contact) {
     setContacts((prev) => {
       const next = prev.filter((c) => c.id !== contact.id).concat(contact);
-      return next.sort((a, b) =>
-        a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-      );
+      return next.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     });
   }
 
@@ -150,9 +146,7 @@ export default function ContactsApp() {
     return (
       <section className="mx-auto w-full max-w-md px-6 py-20 text-center">
         <BookUser className="mx-auto size-10 text-muted-foreground" />
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-          Connect your pod
-        </h1>
+        <h1 className="mt-4 text-2xl font-semibold tracking-tight">Connect your pod</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Your contacts live in your Solid Pod. Sign in to see them.
         </p>
@@ -180,9 +174,7 @@ export default function ContactsApp() {
 
       <div className="grid flex-1 gap-6 md:grid-cols-[320px_1fr]">
         {/* List column — hidden on mobile while a contact is open. */}
-        <div
-          className={`flex min-w-0 flex-col ${selected ? "hidden md:flex" : ""}`}
-        >
+        <div className={`flex min-w-0 flex-col ${selected ? "hidden md:flex" : ""}`}>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -229,9 +221,7 @@ export default function ContactsApp() {
                     >
                       <ContactAvatar name={c.name} />
                       <span className="min-w-0">
-                        <span className="block truncate text-sm font-medium">
-                          {c.name}
-                        </span>
+                        <span className="block truncate text-sm font-medium">{c.name}</span>
                         {(c.org || c.email) && (
                           <span className="block truncate text-xs text-muted-foreground">
                             {c.org ?? c.email}
@@ -247,11 +237,7 @@ export default function ContactsApp() {
         </div>
 
         {/* Detail column. */}
-        <div
-          className={`min-w-0 rounded-lg border bg-card ${
-            selected ? "" : "hidden md:block"
-          }`}
-        >
+        <div className={`min-w-0 rounded-lg border bg-card ${selected ? "" : "hidden md:block"}`}>
           {selected ? (
             <ContactDetail
               contact={selected}
@@ -290,12 +276,10 @@ export default function ContactsApp() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Delete {confirmDelete?.name ?? "contact"}?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Delete {confirmDelete?.name ?? "contact"}?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes the contact from your pod. There is no
-              trash to recover it from.
+              This permanently removes the contact from your pod. There is no trash to recover it
+              from.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
