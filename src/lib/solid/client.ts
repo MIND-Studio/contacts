@@ -6,8 +6,7 @@ import { createSolidClient } from "@mind-studio/core/solid";
  * The Solid issuer used when the user hasn't picked one. Read from the app's
  * env here (core stays framework-agnostic) and handed to the shared client.
  */
-export const DEFAULT_ISSUER =
-  process.env.NEXT_PUBLIC_SOLID_ISSUER ?? "https://pods.mindpods.org/";
+export const DEFAULT_ISSUER = process.env.NEXT_PUBLIC_SOLID_ISSUER ?? "https://pods.mindpods.org/";
 
 /**
  * The one shared Solid foundation for Mind Contacts — session, the single-flight

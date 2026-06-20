@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -14,6 +13,7 @@ import {
   Spinner,
   Textarea,
 } from "@mind-studio/ui";
+import { useEffect, useState } from "react";
 import type { Contact, ContactFields } from "@/lib/contacts/store";
 
 /**

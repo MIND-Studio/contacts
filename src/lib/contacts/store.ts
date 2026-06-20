@@ -1,22 +1,22 @@
 "use client";
 
 import {
+  buildThing,
   createContainerAt,
   createSolidDataset,
   createThing,
-  buildThing,
-  setThing,
-  getThing,
-  getStringNoLocale,
-  getSolidDataset,
-  getContainedResourceUrlAll,
-  saveSolidDatasetAt,
   deleteSolidDataset,
+  getContainedResourceUrlAll,
+  getSolidDataset,
+  getStringNoLocale,
+  getThing,
   type SolidDataset,
+  saveSolidDatasetAt,
+  setThing,
 } from "@inrupt/solid-client";
-import { session } from "@/lib/solid/session";
-import { isBrokered, brokerFetch, currentIdentity } from "@/lib/solid/broker";
 import { contactsContainerFor } from "@/lib/config";
+import { brokerFetch, currentIdentity, isBrokered } from "@/lib/solid/broker";
+import { session } from "@/lib/solid/session";
 
 /**
  * Pod data model — one Turtle resource per contact at
@@ -129,7 +129,7 @@ export async function listContacts(): Promise<Contact[]> {
       } catch {
         return null; // skip unreadable/foreign resources rather than fail the list
       }
-    })
+    }),
   );
   return results
     .filter((c): c is Contact => c !== null)
@@ -138,10 +138,7 @@ export async function listContacts(): Promise<Contact[]> {
 
 function buildContactDataset(url: string, fields: ContactFields) {
   let builder = buildThing(createThing({ url: `${url}${FRAGMENT}` }))
-    .addUrl(
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-      vcard("Individual")
-    )
+    .addUrl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", vcard("Individual"))
     .addStringNoLocale(vcard("fn"), fields.name.trim());
   if (fields.email?.trim())
     builder = builder.addStringNoLocale(vcard("hasEmail"), fields.email.trim());
@@ -151,8 +148,7 @@ function buildContactDataset(url: string, fields: ContactFields) {
     builder = builder.addStringNoLocale(vcard("hasURL"), fields.website.trim());
   if (fields.org?.trim())
     builder = builder.addStringNoLocale(vcard("organization-name"), fields.org.trim());
-  if (fields.note?.trim())
-    builder = builder.addStringNoLocale(vcard("note"), fields.note.trim());
+  if (fields.note?.trim()) builder = builder.addStringNoLocale(vcard("note"), fields.note.trim());
   return setThing(createSolidDataset(), builder.build());
 }
 
@@ -174,10 +170,7 @@ export async function createContact(fields: ContactFields): Promise<Contact> {
  * form fields (PUT-replace semantics) — fine for v0 since this app owns the
  * resource shape.
  */
-export async function updateContact(
-  contact: Contact,
-  fields: ContactFields
-): Promise<Contact> {
+export async function updateContact(contact: Contact, fields: ContactFields): Promise<Contact> {
   if (!fields.name.trim()) throw new Error("Name is required");
   await saveSolidDatasetAt(contact.url, buildContactDataset(contact.url, fields), {
     fetch: authedFetch(),

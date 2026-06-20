@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { clearLastIdentity } from "@mind-studio/core";
 import { Button } from "@mind-studio/ui";
 import { LogOut } from "lucide-react";
-import { clearLastIdentity } from "@mind-studio/core";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ensureSession } from "@/lib/solid/auth";
 import { session } from "@/lib/solid/session";
 

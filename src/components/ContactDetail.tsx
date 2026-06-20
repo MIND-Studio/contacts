@@ -1,16 +1,7 @@
 "use client";
 
 import { Button } from "@mind-studio/ui";
-import {
-  ArrowLeft,
-  Building2,
-  Globe,
-  Mail,
-  Pencil,
-  Phone,
-  StickyNote,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, Building2, Globe, Mail, Pencil, Phone, StickyNote, Trash2 } from "lucide-react";
 import type { Contact } from "@/lib/contacts/store";
 import ContactAvatar from "./ContactAvatar";
 
@@ -43,14 +34,8 @@ export default function ContactDetail({
           <div className="flex items-center gap-4">
             <ContactAvatar name={contact.name} size="lg" />
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                {contact.name}
-              </h2>
-              {contact.org && (
-                <p className="mt-0.5 text-sm text-muted-foreground">
-                  {contact.org}
-                </p>
-              )}
+              <h2 className="text-2xl font-semibold tracking-tight">{contact.name}</h2>
+              {contact.org && <p className="mt-0.5 text-sm text-muted-foreground">{contact.org}</p>}
             </div>
           </div>
           <div className="flex shrink-0 gap-2">

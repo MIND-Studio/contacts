@@ -10,9 +10,9 @@ export default function ConnectPage() {
         Sign in with your Solid identity.
       </h1>
       <p className="mt-4 text-muted-foreground">
-        Your address book lives in your pod — not on our servers. Pick the
-        issuer that hosts your pod; we&apos;ll redirect you there for the OIDC
-        dance and come back here once you&apos;re signed in.
+        Your address book lives in your pod — not on our servers. Pick the issuer that hosts your
+        pod; we&apos;ll redirect you there for the OIDC dance and come back here once you&apos;re
+        signed in.
       </p>
       <div className="mt-8">
         <ConnectForm />
